@@ -82,19 +82,28 @@ class Board:
         return result
 
     def place_mines(self, safe_col: int, safe_row: int) -> None:
-        # TODO: Place mines randomly, guaranteeing the first click and its neighbors are safe. And Compute adjacency counts
-        # all_positions = [(c, r) for r in range(self.rows) for c in range(self.cols)]
-        # forbidden = {(safe_col, safe_row)} | set(self.neighbors(safe_col, safe_row))
-        # pool = [p for p in all_positions if p not in forbidden]
-        # random.shuffle(pool)
-        
+        """Place mines randomly, guaranteeing the first click and its neighbors are safe. Then compute adjacency counts."""
+        all_positions = [(c, r) for r in range(self.rows) for c in range(self.cols)]
+        forbidden = {(safe_col, safe_row)} | set(self.neighbors(safe_col, safe_row))
+        pool = [p for p in all_positions if p not in forbidden]
+        random.shuffle(pool)
+
+        for c, r in pool[:self.num_mines]:
+            self.cells[self.index(c, r)].state.is_mine = True
+
         # Compute adjacency counts
-        # for r in range(self.rows):
-        #     for c in range(self.cols):
+        for r in range(self.rows):
+            for c in range(self.cols):
+                cell = self.cells[self.index(c, r)]
+                if cell.state.is_mine:
+                    continue
+                count = sum(
+                    1 for nc, nr in self.neighbors(c, r)
+                    if self.cells[self.index(nc, nr)].state.is_mine
+                )
+                cell.state.adjacent = count
 
-        # self._mines_placed = True
-
-        pass
+        self._mines_placed = True
 
     def reveal(self, col: int, row: int) -> None:
         # TODO: Reveal a cell; if zero-adjacent, iteratively flood to neighbors.
@@ -103,7 +112,6 @@ class Board:
         # if not self._mines_placed:
         #     self.place_mines(col, row)
 
-        
         # self._check_win()
         pass
 
@@ -111,7 +119,7 @@ class Board:
         # TODO: Toggle a flag on a non-revealed cell.
         # if not self.is_inbounds(col, row):
         #     return
-        
+
         pass
 
     def flagged_count(self) -> int:
