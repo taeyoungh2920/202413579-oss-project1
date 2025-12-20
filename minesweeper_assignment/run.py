@@ -214,7 +214,8 @@ class Game:
         self.screen = pygame.display.set_mode(config.display_dimension)
         self.clock = pygame.time.Clock()
 
-        self.board = Board(config.cols, config.rows, config.num_mines)
+        self.difficulty = config.derault_difficulty
+        self.create_board()
         self.renderer = Renderer(self.screen, self.board)
         self.input = InputController(self)
 
@@ -225,9 +226,31 @@ class Game:
         self.start_ticks_ms = 0
         self.end_ticks_ms = 0
 
+    #보드 생성 책임자
+    def create_board(self):
+        d = config.difficulties[self.difficulty]
+        self.board = Board(d["cols"], d["rows"], d["mines"])
+
+        config.width = (
+            config.margin_left
+            + d["cols"] * config.cell_size
+            + config.margin_right
+        )
+
+        config.height = (
+            config.margin_top
+            + d["rows"] * config.cell_size
+            + config.margin_bottom
+        )
+
+        config.display_dimension = (config.width, config.height)
+        self.screen = pygame.display.set_mode(config.display_dimension)
+        if hasattr(self, "renderer"):
+            self.renderer.screen = self.screen
+
     def reset(self):
         """Reset the game state and start a new board."""
-        self.board = Board(config.cols, config.rows, config.num_mines)
+        self.create_board()
         self.renderer.board = self.board
 
         self.highlight_targets.clear()
@@ -268,7 +291,7 @@ class Game:
         self.screen.fill(config.color_bg)
 
         remaining = max(
-            0, config.num_mines - self.board.flagged_count()
+            0, self.board.num_mines - self.board.flagged_count()
         )
         time_text = self._format_time(self._elapsed_ms())
 
@@ -290,9 +313,20 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-
+            
+        # 1 = easy, 2 = normal, 3 = hard
+        # R = Restart
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
+                if event.key == pygame.K_1:
+                    self.difficulty = "Easy"
+                    self.reset()
+                elif event.key == pygame.K_2:
+                    self.difficulty = "Normal"
+                    self.reset()
+                elif event.key == pygame.K_3:
+                    self.difficulty = "Hard"
+                    self.reset()
+                elif event.key == pygame.K_r:
                     self.reset()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
