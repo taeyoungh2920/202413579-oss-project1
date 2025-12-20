@@ -11,7 +11,6 @@ The logic lives in components.Board; this module should not implement rules.
 
 import sys
 import pygame
-import random
 
 import config
 from components import Board
@@ -215,7 +214,7 @@ class Game:
         self.screen = pygame.display.set_mode(config.display_dimension)
         self.clock = pygame.time.Clock()
 
-        self.difficulty = config.default_difficulty
+        self.difficulty = config.derault_difficulty
         self.create_board()
         self.renderer = Renderer(self.screen, self.board)
         self.input = InputController(self)
@@ -226,9 +225,6 @@ class Game:
         self.started = False
         self.start_ticks_ms = 0
         self.end_ticks_ms = 0
-
-        #Hint
-        self.hints_left = 3
 
     #보드 생성 책임자
     def create_board(self):
@@ -262,29 +258,6 @@ class Game:
         self.started = False
         self.start_ticks_ms = 0
         self.end_ticks_ms = 0
-
-        self.hints_left = 3
-
-    #힌트 랜덤 로직 함수
-    def hint(self):
-        if self.hints_left <= 0:
-            return
-        
-        if not self.started:
-            self.started = True
-            self.start_ticks_ms = pygame.time.get_ticks()
-        candidates = [
-            cell 
-            for cell in self.board.cells
-            if(not cell.state.is_mine)
-            and(not cell.state.is_revealed)
-        ]
-
-        if not candidates:
-            return
-        cell = random.choice(candidates)
-        self.board.reveal(cell.col, cell.row)
-        self.hints_left -= 1
 
     def _elapsed_ms(self) -> int:
         """Return elapsed time in milliseconds."""
@@ -341,8 +314,8 @@ class Game:
             if event.type == pygame.QUIT:
                 return False
             
-            # 1 = easy, 2 = normal, 3 = hard
-            # R = Restart H = hint
+        # 1 = easy, 2 = normal, 3 = hard
+        # R = Restart
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     self.difficulty = "Easy"
@@ -355,12 +328,10 @@ class Game:
                     self.reset()
                 elif event.key == pygame.K_r:
                     self.reset()
-                elif event.key == pygame.K_h:
-                    self.hint()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.input.handle_mouse(event.pos, event.button)
-            
+
         if (
             (self.board.game_over or self.board.win)
             and self.started
