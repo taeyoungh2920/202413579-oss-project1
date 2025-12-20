@@ -88,4 +88,4 @@ difficulties = {
                  "Normal": { "cols": 16, "rows": 16, "mines": 40, },
                  "Hard": { "cols": 30, "rows": 20, "mines": 99,},
                 }
-derault_difficulty = "Normal"
+default_difficulty = "Normal"
