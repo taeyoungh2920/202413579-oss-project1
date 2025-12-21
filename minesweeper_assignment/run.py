@@ -10,12 +10,12 @@ The logic lives in components.Board; this module should not implement rules.
 """
 
 import pygame
-import random
 
 import config
 from components import Board
 from pygame.locals import Rect
 
+import random
 
 class Renderer:
     """Draws the Minesweeper UI.
