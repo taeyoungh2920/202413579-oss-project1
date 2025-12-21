@@ -156,6 +156,16 @@ class Renderer:
         rect = label.get_rect(center=(config.width // 2, config.margin_top // 2))
         self.screen.blit(label, rect)
 
+    def draw_hint_count(self, hints_left: int) -> None:
+        text = f"Hints left: {hints_left}"
+        label = self.font.render(text, True, config.color_text_inv)
+
+        # 화면 중앙, 살짝 아래 (난이도 안내/헤더와 안 겹치게)
+        rect = label.get_rect(
+            center=(config.width // 2, config.height // 2 - 60)
+        )
+        self.screen.blit(label, rect)
+
 class InputController:
     """Translates input events into game and board actions."""
 
@@ -350,6 +360,10 @@ class Game:
             for c in range(self.board.cols):
                 highlighted = (now <= self.highlight_until_ms) and ((c, r) in self.highlight_targets)
                 self.renderer.draw_cell(c, r, highlighted)
+                
+        # 힌트 잔여 수 표시 (게임 진행 중일 때만)
+        if self.started and not self.board.game_over and not self.board.win:
+            self.renderer.draw_hint_count(self.hints_left)
 
         result = self._result_text()
         if result:
