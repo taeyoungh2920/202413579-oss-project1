@@ -17,7 +17,8 @@ Groups:
 # Display settings
 fps = 60
 
-# Grid settings
+# Grid settings 
+# 혹시 몰라 남겨둡니다.
 cols = 16
 rows = 16
 num_mines = 40
@@ -81,3 +82,10 @@ result_overlay_alpha = 120
 # Misc
 title = "Minesweeper"
 
+# Difficulties
+difficulties = {
+                 "Easy": { "cols": 9, "rows": 9, "mines": 10, },
+                 "Normal": { "cols": 16, "rows": 16, "mines": 40, },
+                 "Hard": { "cols": 30, "rows": 20, "mines": 99,},
+                }
+derault_difficulty = "Normal"
