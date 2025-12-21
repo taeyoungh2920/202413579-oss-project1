@@ -150,6 +150,11 @@ class Renderer:
                 (config.width // 2 - best_label.get_width() // 2, y),
             )
 
+    def draw_difficulty_hint(self) -> None:
+        text = "1: Easy   2: Normal   3: Hard"
+        label = self.font.render(text, True, config.color_text_inv)
+        rect = label.get_rect(center=(config.width // 2, config.margin_top // 2))
+        self.screen.blit(label, rect)
 
 class InputController:
     """Translates input events into game and board actions."""
@@ -336,6 +341,9 @@ class Game:
         remaining = max(0, self.board.num_mines - self.board.flagged_count())
         time_text = self._format_time(self._elapsed_ms())
         self.renderer.draw_header(remaining, time_text)
+
+        if not self.started and not self.board.game_over and not self.board.win:
+            self.renderer.draw_difficulty_hint()
 
         now = pygame.time.get_ticks()
         for r in range(self.board.rows):
