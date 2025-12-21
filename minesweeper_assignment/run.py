@@ -1,5 +1,4 @@
-﻿"""
-Pygame presentation layer for Minesweeper.
+﻿"""Pygame presentation layer for Minesweeper.
 
 This module owns:
 - Renderer: all drawing of cells, header, and result overlays
@@ -222,7 +221,6 @@ class InputController:
             }
 
             game.highlight_until_ms = pygame.time.get_ticks() + config.highlight_duration_ms
-
 
 class Game:
     """Main application object orchestrating loop and high-level state."""
