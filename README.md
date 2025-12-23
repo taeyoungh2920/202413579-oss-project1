@@ -5,6 +5,9 @@ Key Features
 - config.py를 통해 각 숫자마다 다른 색을 적용 할 수 있음.
 - 지뢰가 없는 칸(0)은 숫자가 표시되지 않음.
 
+- <img width="447" height="774" alt="image" src="https://github.com/user-attachments/assets/2f4015c1-c71c-4c26-aa83-232ef1f0d4c2" />
+
+
 2. 난이도 설정 기능
 - Easy / Normal / Hard 난이도를 제공함.
   (1번 키는 Easy, 2번 키는 Normal, 3번 키는 Hard)
